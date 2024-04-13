@@ -9,6 +9,12 @@
       "alignment": "left",
       "segments": [
         {
+          "foreground": "p:yellow",
+          "style": "plain",
+          "template": "\u256d\u2500",
+          "type": "text"
+        },
+        {
           "type": "session",
           "style": "diamond",
           "foreground": "p:black",
@@ -129,6 +135,28 @@
           "template": "at <p:blue><b>{{ .CurrentDate | date \"15:04:05\" }}</b></>"
         }
       ]
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "p:yellow",
+          "style": "plain",
+          "template": "\u2570\u2500",
+          "type": "text"
+        },
+        {
+          "foreground": "p:yellow",
+          "properties": {
+            "always_enabled": true
+          },
+          "style": "plain",
+          "template": "\ue285 ",
+          "type": "status"
+        }
+      ],
+      "type": "prompt"
     }
   ],
   "tooltips": [
