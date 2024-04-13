@@ -111,10 +111,10 @@ properties:
         description: Setting up git config
       settings:
         getScript: |
-          return git config --global --list
+          return "$(git config --global core.autocrlf) - $(git config --global core.eof)"
         setScript: |
           git config --global core.autocrlf false
           git config --global core.eol lf
         testScript: |
-          return $false
+          return $(git config --global core.eof) -eq "lf" -and $(git config --global core.autocrlf) -eq "false"
   configurationVersion: 0.2.0
