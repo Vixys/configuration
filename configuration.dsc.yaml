@@ -71,4 +71,57 @@ properties:
       settings:
         id: SublimeHQ.SublimeMerge
         source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install gsudo
+        allowPrerelease: true
+      settings:
+        id: gerardog.gsudo
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install Google Drive
+        allowPrerelease: true
+      settings:
+        id: Google.Drive
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install Google Chrome
+        allowPrerelease: true
+      settings:
+        id: Google.Chrome
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install 1Password
+        allowPrerelease: true
+      settings:
+        id: AgileBits.1Password
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Install Rustup
+        allowPrerelease: true
+      settings:
+        id: Rustlang.Rustup
+        source: winget
+    - resource: PSDscResources/Environment
+      directives:
+        description: Set environment variable
+        allowPrerelease: true
+      settings:
+        target: Machine
+        name: TestFromWinget
+        value: Test42
+    - resource: PSDscResources/Script
+      directives:
+        description: Setting up oh-my-posh
+        allowPrerelease: true
+      settings:
+        getScript: Machine
+        setScript: |
+          
+        testScript: |
+          return $true
   configurationVersion: 0.2.0
