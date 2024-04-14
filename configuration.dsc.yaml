@@ -111,9 +111,16 @@ properties:
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: jetbrainsToolbox
       directives:
-        description: Install GitHub JetBrains Toolbox
+        description: Install JetBrains Toolbox
       settings:
         id: JetBrains.Toolbox
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: paintDotNet
+      directives:
+        description: Install Paint.NET
+      settings:
+        id: dotPDN.PaintDotNet
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
