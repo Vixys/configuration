@@ -81,6 +81,41 @@ properties:
         id: AgileBits.1Password
         source: winget
     - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: gpg
+      directives:
+        description: Install Gpg
+      settings:
+        id: GnuPG.Gpg4win
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: zoxide
+      directives:
+        description: Install Zoxide
+      settings:
+        id: ajeetdsouza.zoxide
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: fzf
+      directives:
+        description: Install fzf
+      settings:
+        id: junegunn.fzf
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: githubCli
+      directives:
+        description: Install GitHub CLI
+      settings:
+        id: GitHub.cli
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: jetbrainsToolbox
+      directives:
+        description: Install GitHub JetBrains Toolbox
+      settings:
+        id: JetBrains.Toolbox
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Install Rustup
       settings:
@@ -111,10 +146,51 @@ properties:
         description: Setting up git config
       settings:
         getScript: |
-          return "$(git config --global core.autocrlf) - $(git config --global core.eof)"
+          return "$(git config --global core.autocrlf)"
         setScript: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
+          git config --global core.autocrlf true
         testScript: |
-          return $(git config --global core.eof) -eq "lf" -and $(git config --global core.autocrlf) -eq "false"
+          return $(git config --global core.autocrlf) -eq "true"
+    - resource: PSDscResources/Script
+      id: zoxideConfig
+      dependsOn:
+        - zoxide
+        - fzf
+      directives:
+        description: Setting up Zoxide
+      settings:
+        getScript: |
+          return Get-Content C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 | Select-String "Invoke-Expression (& { (zoxide init --cmd cd powershell | Out-String) })"
+        setScript: |
+          Add-Content -Path C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 -Value "`r`nInvoke-Expression (& { (zoxide init --cmd cd powershell | Out-String) })"
+        testScript: |
+          return $((Get-Content C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 | Select-String "Invoke-Expression (& { (zoxide init --cmd cd powershell | Out-String) })" | Measure-Object).Count) -gt 0
+    - resource: PSDscResources/Script
+      id: githubCliCopilot
+      dependsOn:
+        - githubCli
+      directives:
+        description: Setting up GitHub CLI - Install Copilot
+      settings:
+        getScript: |
+          return gh extension list | Select-String "gh copilot"
+        setScript: |
+          gh extension install github/gh-copilot
+        testScript: |
+          return $((gh extension list | Select-String "gh copilot" | Measure-Object).Count) -gt 0
+    - resource: PSDscResources/Script
+      id: githubCliCopilotAlias
+      dependsOn:
+        - githubCli
+      directives:
+        description: Setting up GitHub CLI - Alias
+      settings:
+        getScript: |
+          return Get-Content C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 | Select-String "Invoke-Expression (& { (gh copilot alias pwsh | Out-String) })"
+        setScript: |
+          Add-Content -Path C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 -Value "`r`nInvoke-Expression (& { (gh copilot alias pwsh | Out-String) })"
+          Add-Content -Path C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 -Value "`r`nSet-Alias -Name ?? -Value ghcs"
+        testScript: |
+          return $((Get-Content C:\Users\${Env:UserName}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 | Select-String "Invoke-Expression (& { (gh copilot alias pwsh | Out-String) })" | Measure-Object).Count) -gt 0
+
   configurationVersion: 0.2.0
